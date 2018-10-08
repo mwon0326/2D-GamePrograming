@@ -13,10 +13,14 @@ class Grass:
 
 class Boy:
     global waypoints
+    global tx, ty
+    image = None
     def __init__(self):
         self.x, self.y = random.randint(0, 200), random.randint(90, 550)
         self.frame = random.randint(0, 7)
-        self.image = load_image('../image/run_animation.png')
+        self.state = random.randint(0, 4)
+        if Boy.image == None:
+            Boy.image = load_image('../image/animation_sheet.png')
         self.speed = random.uniform(1.0, 3.0)
         self.i = 0
         
@@ -33,12 +37,20 @@ class Boy:
                 if dx > 0 and self.x > x: self.x = x
                 if dy < 0 and self.y < y: self.y = y
                 if dy > 0 and self.y > y: self.y = y
+            if x > self.x:
+                self.state = 1
+            elif x < self.x:
+                self.state = 0
+            elif x == self.x and y == self.y and self.state == 1:
+                self.state = 3
+            elif x == self.x and y == self.y and self.state == 0:
+                self.state = 2
             if self.x == x and self.y == y and self.i < len(waypoints) - 1:
                 self.i += 1
         self.frame = (self.frame + 1) % 8
-
+            
     def draw(self):
-        self.image.clip_draw(self.frame * 100, 0, 100, 100, self.x, self.y)
+        self.image.clip_draw(self.frame * 100, self.state * 100, 100, 100, self.x, self.y)
 
 def handle_events():
     global boys
@@ -62,7 +74,7 @@ def enter():
 
     g = Grass()
     boys = []
-    for i in range(20):
+    for i in range(1000):
         boys += [Boy()]
     
     waypoints = []
