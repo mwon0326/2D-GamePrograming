@@ -4,6 +4,7 @@ import  game_framework
 class Castle:
     image = None
     def __init__(self):
+        self.x = 800
         self.stage1 = load_image('resource/노을.png')
         self.stage2 = load_image('resource/저녁.png')
         self.stage3 = load_image('resource/밤.png')
@@ -13,9 +14,9 @@ class Castle:
         Castle.image = self.stage1
 
     def draw(self):
-        self.image.draw(400, 300)
+        self.image.clip_draw(self.x, 0, 800, 600, 400, 300)
 
-    def update(self):
+    def change(self):
         self.count += 1
         if self.count == 1:
             Castle.image = self.stage2
@@ -37,11 +38,11 @@ class Princess:
         self.leftP = load_image('resource/princess_left.png')
         self.frame = 0
         self.state = 0
-        self.x, self.y = 750, 100
+        self.x, self.y = 700, 200
         Princess.image = self.leftP
 
     def draw(self):
-       self.image.clip_draw(self.frame * 100, 0, 100, 149, self.x, self.y)
+       self.image.clip_draw(self.frame * 100, 0, 200, 300, self.x, self.y)
 
 def enter():
     global  c, p
