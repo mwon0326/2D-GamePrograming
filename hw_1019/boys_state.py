@@ -19,7 +19,7 @@ key_event_table = {
     (SDL_KEYDOWN, SDLK_RIGHT) : RIGHT_DOWN,
     (SDL_KEYDOWN, SDLK_LEFT) : LEFT_DOWN,
     (SDL_KEYUP, SDLK_RIGHT) : RIGHT_UP,
-    (SDL_KEYUP, SDLK_RIGHT) : LEFT_UP
+    (SDL_KEYUP, SDLK_LEFT) : LEFT_UP
 }
     
 next_state_table = {
@@ -29,11 +29,8 @@ next_state_table = {
 }
     
 class Boy:
-    image = None;
-    
     def __init__(self):
-        if Boy.image == None:
-            Boy.image = load_image('../image/animation_sheet.png')
+        self.image = load_image('../image/animation_sheet.png')
         self.x, self.y = 800 // 2, 90
         self.velocity = 0
         self.dir = 1
@@ -58,9 +55,9 @@ class Boy:
 
     def draw_IDLE(self):
         if self.dir == 1:
-            Boy.image.clip_draw(self.frame * 100, 300, 100, 100, self.x, self.y)
+            self.image.clip_draw(self.frame * 100, 300, 100, 100, self.x, self.y)
         else:
-            Boy.image.clip_draw(self.frame * 100, 200, 100, 100, self.x, self.y)
+            self.image.clip_draw(self.frame * 100, 200, 100, 100, self.x, self.y)
 
     def enter_RUN(self):
         self.frame = 0
@@ -91,9 +88,9 @@ class Boy:
 
     def draw_SLEEP(self):
         if self.dir == 1:
-            Boy.image.clip_composite_draw(self.frame * 100, 300, 100, 100, 3.141592 / 2, ''. self.x - 25, self.y - 25, 100, 100)
+            self.image.clip_composite_draw(self.frame * 100, 300, 100, 100, 3.141592 / 2, ''. self.x - 25, self.y - 25, 100, 100)
         else:
-            Boy.image.clip_composite_draw(self.frame * 100, 200, 100, 100, -3.141592 / 2, ''. self.x + 25, self.y - 25, 100, 100)
+            self.image.clip_composite_draw(self.frame * 100, 200, 100, 100, -3.141592 / 2, ''. self.x + 25, self.y - 25, 100, 100)
 
     def change_state(self, state):
         self.exit_state[self.cur_state](self)
@@ -112,6 +109,7 @@ class Boy:
     def handle_event(self, event):
         if (event.type, event.key) in key_event_table:
             key_event = key_event_table[(event.type, event.key)]
+            print(event.type)
             if key_event == RIGHT_DOWN:
                 self.velocity += 1
             elif key_event == LEFT_DOWN:
@@ -166,6 +164,8 @@ def handle_events():
                 game_framework.pop_state()
             else:
                 boy.handle_event(e)
+        else:
+            boy.handle_event(e)
     
 if __name__ == '__main__':
     main()
