@@ -1,6 +1,7 @@
 from pico2d import *
-import  game_framework
+import game_framework
 import game_state
+import game
 
 image = None
 

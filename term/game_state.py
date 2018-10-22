@@ -1,5 +1,5 @@
 from pico2d import *
-import  game_framework
+import game_framework
 
 class Castle:
     global backgroundX, princessX, state, count
@@ -62,6 +62,8 @@ class Princess:
 
         self.frame = (self.frame + 1) % 4
 
+time = 0.0
+
 def enter():
     global  c, p
     open_canvas()
@@ -78,8 +80,9 @@ def update():
     pass
 
 def exit():
-    global c
+    global c, p
     del c
+    del p
 
 def pause():
     pass
@@ -109,7 +112,9 @@ def handle_events():
         Castle.backgroundX = 0
         Castle.count += 1
         c.change()
+
         p.update()
+
     elif Castle.count % 2 == 1 and Princess.princessX >= 750:
         Princess.princessX = 750
         Princess.state = 0

@@ -1,0 +1,4 @@
+{
+	"LEFT" : {"StartState" : " LEFT", "x": 700, "y": 200, "frame": 3, "state": 1},
+	"RIGHT" : {"StartState" : "RIGHT", "x": 100, "y": 200, "frame": 0, "state": 0}
+}
