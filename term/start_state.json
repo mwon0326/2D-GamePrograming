@@ -1,4 +1,4 @@
 {
-	"LEFT" : {"StartState" : " LEFT", "x": 700, "y": 200, "frame": 3, "state": 1},
-	"RIGHT" : {"StartState" : "RIGHT", "x": 100, "y": 200, "frame": 0, "state": 0}
+	"LEFT" : {"StartState" : "CHARACTER_MOVE", "x": 700, "backX": 800, "frame": 0, "dir": 1},
+	"RIGHT" : {"StartState" : "CHARACTER_MOVE", "x": 100, "backX": 0, "frame": 0, "dir": 0}
 }
