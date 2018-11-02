@@ -3,12 +3,14 @@ import game_framework
 from player_state import Princess
 from background_state import Castle
 from image_state import BackGround
-from fire_state import  Fire
+from fire_state import Fire
+from background_state import Menu
 import json
 
 player = None
 fire = None
 background = None
+menu = None
 cur_event = None
 level = 1
 data = None
@@ -24,7 +26,7 @@ dir_table = {
 }
 
 def enter():
-    global  player, background, image, fire
+    global  player, background, image, fire, menu
     global  cur_event
     global level
     global  data
@@ -33,6 +35,8 @@ def enter():
     player = Princess()
     background = Castle()
     image = BackGround()
+    menu = Menu()
+
     level = 1
     fire = [Fire() for i in range(level * 7)]
 
@@ -110,7 +114,7 @@ def move():
     change_event()
 
 def change_level():
-    global player, background, image
+    global player, background, image, fire
     global cur_event
     global level
     if level % 2 == 1:
@@ -136,6 +140,9 @@ def change_level():
         background.image = image.stage4
     elif level == 5:
         background.image = image.stage5
+
+    for f in fire:
+        f.change_stage()
 
 def handle_events():
     global player, background
@@ -171,4 +178,5 @@ def draw():
     player.draw()
     for f in fire:
         f.draw()
+    menu.draw()
     update_canvas()
