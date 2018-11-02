@@ -14,11 +14,13 @@ level = 1
 data = None
 
 CHARACTER_MOVE, BACKGROUND_MOVE = range(2)
-RIGHT_MOVE, LEFT_MOVE = range(2)
+RIGHT_MOVE, LEFT_MOVE, LEFT_STOP, RIGHT_STOP = range(4)
 
 dir_table = {
     RIGHT_MOVE : 0,
-    LEFT_MOVE: 1
+    LEFT_MOVE: 1,
+    RIGHT_STOP : 2,
+    LEFT_STOP : 3
 }
 
 def enter():
@@ -152,6 +154,15 @@ def handle_events():
                 player.dir = dir_table[LEFT_MOVE]
                 background.dir = dir_table[LEFT_MOVE]
                 move()
+            elif event.key == SDLK_DOWN:
+                if player.dir == dir_table[LEFT_MOVE]:
+                    player.dir = dir_table[LEFT_STOP]
+                elif player.dir == dir_table[RIGHT_MOVE]:
+                    player.dir = dir_table[RIGHT_STOP]
+                elif player.dir == dir_table[LEFT_STOP]:
+                    player.dir = dir_table[LEFT_STOP]
+                else:
+                    player.dir = dir_table[RIGHT_STOP]
 
 def draw():
     global player, background, fire
