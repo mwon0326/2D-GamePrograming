@@ -59,9 +59,15 @@ def exit():
     del background
 
 def update():
-    global fire
+    global fire, player
     for f in fire:
         f.update()
+        if collide(player, f, player.dir, 1):
+            print("충돌")
+        elif collide(player, f, player.dir, 2):
+            print("충돌")
+        elif collide(player, f, player.dir, 3):
+            print("충돌")
     delay(0.025)
 
 def resume():
@@ -178,5 +184,25 @@ def draw():
     player.draw()
     for f in fire:
         f.draw()
+        f.draw_bb()
     menu.draw()
+    if player.dir == dir_table[LEFT_MOVE] or player.dir == dir_table[LEFT_STOP]:
+        player.draw_face_left_bb()
+        player.draw_crown_left_bb()
+        player.draw_dress_left_bb()
+    else:
+        player.draw_face_right_bb()
+        player.draw_crown_right_bb()
+        player.draw_dress_right_bb()
     update_canvas()
+
+def collide(a, b, state, num):
+    left_a, bottom_a, right_a, top_a = a.get_bb(state, num)
+    left_b, bottom_b, right_b, top_b = b.get_bb()
+
+    if state == 2 or state == 3 : return False
+    if left_a > right_b : return False
+    if right_a < left_b : return False
+    if top_a < bottom_b : return  False
+    if bottom_a > top_b : return  False
+    return True
