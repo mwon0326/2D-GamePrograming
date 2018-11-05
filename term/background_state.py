@@ -19,11 +19,6 @@ class Castle:
 class Menu:
     def __init__(self):
         self.image = load_image('resource/menu.png')
-        self.font = load_font('resource/DIEHLDA.ttf', 25)
-        self.time = 0
-        self.x = 130
-        self.y = 50
 
     def draw(self):
         self.image.draw(400, 50);
-        self.font.draw(self.x, self.y, '%d' % self.time, (0, 0, 0))

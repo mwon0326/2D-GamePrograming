@@ -5,25 +5,15 @@ from background_state import Castle
 from image_state import BackGround
 from fire_state import Fire
 from background_state import Menu
-from image_state import NPCImage
-from npc_state import NPC
-from npc_state import Item
-
 import json
-import time
 
 player = None
 fire = None
 background = None
-npc = None
 menu = None
 cur_event = None
-npc_image = None
-item = None
 level = 1
 data = None
-time = 0
-cur_time = 0
 
 CHARACTER_MOVE, BACKGROUND_MOVE = range(2)
 RIGHT_MOVE, LEFT_MOVE, LEFT_STOP, RIGHT_STOP = range(4)
@@ -36,22 +26,19 @@ dir_table = {
 }
 
 def enter():
-    global player, background, image, fire, menu, npc, npc_image, item
-    global cur_event
-    global level, time, cur_time
-    global data
+    global  player, background, image, fire, menu
+    global  cur_event
+    global level
+    global  data
 
     open_canvas()
     player = Princess()
     background = Castle()
     image = BackGround()
     menu = Menu()
-    npc = NPC()
-    npc_image = NPCImage()
-    item = Item()
 
     level = 1
-    fire = [Fire() for i in range(level * 4)]
+    fire = [Fire() for i in range(level * 7)]
 
     fh = open('start_state.json')
     data = json.load(fh)
@@ -65,24 +52,14 @@ def enter():
     background.x = data['LEFT']['backX']
 
     cur_event = data['LEFT']['StartState']
-    time = 0
-    cur_time = pico2d.get_time()
-
-    npc.image = npc_image.npc_image
-    npc.cartoon = npc_image.npc_bubble
-    npc.present = npc_image.item1
 
 def exit():
-    global  player, background, image, fire, menu
+    global  player, background
     del player
     del background
-    del image
-    del fire
-    del menu
 
 def update():
-    global fire, player, menu, npc
-    global cur_time, time
+    global fire, player
     for f in fire:
         f.update()
         if collide(player, f, player.dir, 1):
@@ -91,14 +68,6 @@ def update():
             print("충돌")
         elif collide(player, f, player.dir, 3):
             print("충돌")
-
-    t = get_time()
-    if t - cur_time >= 1:
-        cur_time = t
-        time = time + 1
-        menu.time = time
-        npc.time = time
-
     delay(0.025)
 
 def resume():
@@ -151,8 +120,8 @@ def move():
     change_event()
 
 def change_level():
-    global player, background, image, fire, menu, npc_image, npc
-    global cur_event,cur_time, time
+    global player, background, image, fire
+    global cur_event
     global level
     if level % 2 == 1:
         player.x = data['LEFT']['x']
@@ -171,26 +140,18 @@ def change_level():
 
     if level == 2:
         background.image = image.stage2
-        npc.present = npc_image.item2
     elif level == 3:
         background.image = image.stage3
-        npc.present = npc_image.item3
     elif level == 4:
         background.image = image.stage4
-        npc.present = npc_image.item4
     elif level == 5:
         background.image = image.stage5
-        npc.present = npc_image.item5
 
     for f in fire:
         f.change_stage()
 
-    time = 0
-    menu.time = time
-    cur_time = get_time()
-
 def handle_events():
-    global player, background, item
+    global player, background
     events = get_events()
     for event in events:
         if event.type == SDL_QUIT:
@@ -215,10 +176,9 @@ def handle_events():
                     player.dir = dir_table[LEFT_STOP]
                 else:
                     player.dir = dir_table[RIGHT_STOP]
-        item.event_hanble(event)
 
 def draw():
-    global player, background, fire, npc, item
+    global player, background, fire
     clear_canvas()
     background.draw()
     player.draw()
@@ -234,8 +194,6 @@ def draw():
         player.draw_face_right_bb()
         player.draw_crown_right_bb()
         player.draw_dress_right_bb()
-    npc.draw()
-    item.draw()
     update_canvas()
 
 def collide(a, b, state, num):
