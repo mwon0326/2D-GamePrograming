@@ -6,10 +6,10 @@ STAGE1, STAGE2, STAGE3, STAGE4, STAGE5 = range(5)
 MIN, MAX = range(2)
 speed_table = {
                 STAGE1 : {MIN : 5, MAX : 8},
-                STAGE2 : {MIN : 10, MAX : 13},
-                STAGE3 : {MIN : 14, MAX : 18},
-                STAGE4 : {MIN : 17, MAX : 21},
-                STAGE5 : {MIN : 19, MAX : 23}}
+                STAGE2 : {MIN : 7, MAX : 9},
+                STAGE3 : {MIN : 9, MAX : 11},
+                STAGE4 : {MIN : 11, MAX : 13},
+                STAGE5 : {MIN : 13, MAX : 15}}
 
 next_stage_table = {STAGE1 : STAGE2, STAGE2 : STAGE3, STAGE3 : STAGE4, STAGE4 : STAGE5}
 
@@ -48,3 +48,14 @@ class Fire:
 
     def draw_bb(self):
         draw_rectangle(*self.get_bb())
+
+    def player_collide(self, a, b, state, num):
+        left_a, bottom_a, right_a, top_a = a.get_bb(state, num)
+        left_b, bottom_b, right_b, top_b = b.get_bb()
+
+        if state == 2 or state == 3: return False
+        if left_a > right_b: return False
+        if right_a < left_b: return False
+        if top_a < bottom_b: return False
+        if bottom_a > top_b: return False
+        return True

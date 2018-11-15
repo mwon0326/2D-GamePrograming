@@ -1,21 +1,22 @@
 from pico2d import *
 import game_framework
 
-class Princess:
+class Player:
     def __init__(self):
         self.image = load_image('resource/animation.png')
         self.x, self.y = 200, 250
         self.frame = 0
         self.dir = 1
+        self.speed = 5
 
     def draw(self):
         self.image.clip_draw(self.frame * 150, self.dir * 250, 150, 250, self.x, self.y)
 
     def move(self):
         if self.dir == 1:
-            self.x -= 25
+            self.x -= self.speed
         else:
-            self.x += 25
+            self.x += self.speed
         self.frame = (self.frame + 1) % 4
 
     def motion(self):

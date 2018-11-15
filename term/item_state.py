@@ -1,5 +1,6 @@
 from pico2d import *
 from image_state import ItemImage
+from npc_state import NPC
 
 ITEM1, ITEM2, ITEM3, ITEM4, ITEM5 = range(5)
 x, y = range(2)
@@ -33,12 +34,23 @@ class Item:
         self.click = 0
         self.drag = False
 
+        self.draw1 = True
+        self.draw2 = True
+        self.draw3 = True
+        self.draw4 = True
+        self.draw5 = True
+
     def draw(self):
-        self.item1.draw(self.x1, self.y1)
-        self.item2.draw(self.x2, self.y2)
-        self.item3.draw(self.x3, self.y3)
-        self.item4.draw(self.x4, self.y4)
-        self.item5.draw(self.x5, self.y5)
+        if self.draw1:
+            self.item1.draw(self.x1, self.y1)
+        if self.draw2:
+            self.item2.draw(self.x2, self.y2)
+        if self.draw3:
+            self.item3.draw(self.x3, self.y3)
+        if self.draw4:
+            self.item4.draw(self.x4, self.y4)
+        if self.draw5:
+            self.item5.draw(self.x5, self.y5)
 
     def event_hanble(self, event):
         global mouse
@@ -73,15 +85,15 @@ class Item:
 
     def stop(self):
         if self.click == 1:
-            del self.item1
+            self.draw1 = False
         elif self.click == 2:
-            del self.item2
+            self.draw2 = False
         elif self.click == 3:
-            del self.item3
+            self.draw3 = False
         elif self.click == 4:
-            del self.item4
+            self.draw4 = False
         elif self.click == 5:
-            del self.item5
+            self.draw5 = False
 
     def get_bb(self):
         if self.click == 1:
@@ -115,7 +127,7 @@ class Item:
             return True
         return False
 
-    def npc_collide(self, a, b):
+    def npc_collide(self, a, b, level):
         left_a, bottom_a, right_a, top_a = a.get_bb()
         left_b, bottom_b, right_b, top_b = b.get_bb()
 
@@ -123,4 +135,8 @@ class Item:
         if right_a < left_b: return False
         if top_a < bottom_b: return False
         if bottom_a > top_b: return False
-        return True
+
+        if level == self.click:
+            return True
+        else:
+            return False

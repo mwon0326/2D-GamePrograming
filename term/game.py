@@ -1,13 +1,15 @@
 from pico2d import *
 import game_framework
-from player_state import Princess
-from background_state import Castle
-from image_state import BackGround
+from player_state import Player
+from background_state import BackGround
+from image_state import BackGroundImage
 from fire_state import Fire
-from background_state import Menu
+from background_state import ItemBox
 from image_state import NPCImage
+from image_state import ItemImage
 from npc_state import NPC
-from npc_state import Item
+from item_state import Item
+from image_state import StageImage
 
 import json
 import time
@@ -17,13 +19,17 @@ fire = None
 background = None
 npc = None
 menu = None
+stage = None
 cur_event = None
 npc_image = None
+back_image = None
+item_image = None
 item = None
 level = 1
 data = None
 time = 0
 cur_time = 0
+move_key = False
 
 CHARACTER_MOVE, BACKGROUND_MOVE = range(2)
 RIGHT_MOVE, LEFT_MOVE, LEFT_STOP, RIGHT_STOP = range(4)
@@ -36,19 +42,21 @@ dir_table = {
 }
 
 def enter():
-    global player, background, image, fire, menu, npc, npc_image, item
+    global player, background, back_image, fire, menu, npc, npc_image, item, item_image
     global cur_event
     global level, time, cur_time
     global data
+    global move_key
 
     open_canvas()
-    player = Princess()
-    background = Castle()
-    image = BackGround()
-    menu = Menu()
+    player = Player()
+    background = BackGround()
+    back_image = BackGroundImage()
+    menu = ItemBox()
     npc = NPC()
     npc_image = NPCImage()
     item = Item()
+    item_image = ItemImage()
 
     level = 1
     fire = [Fire() for i in range(level * 4)]
@@ -60,36 +68,41 @@ def enter():
     player.frame = data['LEFT']['frame']
     player.dir = data['LEFT']['dir']
 
-    background.image = image.stage1
+    background.image = back_image.stage1
     background.dir = data['LEFT']['dir']
     background.x = data['LEFT']['backX']
 
     cur_event = data['LEFT']['StartState']
     time = 0
-    cur_time = pico2d.get_time()
+    cur_time = get_time()
 
     npc.image = npc_image.npc_image
     npc.cartoon = npc_image.npc_bubble
-    npc.present = npc_image.item1
+    npc.cartoon2 = npc_image.npc_bubble2
+    npc.present = item_image.item1
+
+    move_key = False
 
 def exit():
-    global  player, background, image, fire, menu
+    global player, background, back_image, fire, menu
     del player
     del background
-    del image
+    del back_image
     del fire
     del menu
 
 def update():
-    global fire, player, menu, npc
+    global fire, player, menu, npc, item, npc_image
     global cur_time, time
+    global move_key
+
     for f in fire:
         f.update()
-        if collide(player, f, player.dir, 1):
+        if f.player_collide(player, f, player.dir, 1):
             print("충돌")
-        elif collide(player, f, player.dir, 2):
+        elif f.player_collide(player, f, player.dir, 2):
             print("충돌")
-        elif collide(player, f, player.dir, 3):
+        elif f.player_collide(player, f, player.dir, 3):
             print("충돌")
 
     t = get_time()
@@ -98,7 +111,18 @@ def update():
         time = time + 1
         menu.time = time
         npc.time = time
+        npc.timer()
 
+    if item.npc_collide(npc, item, level) and npc.is_draw:
+        npc.image = npc_image.npc_image2
+        npc.stop()
+        item.stop()
+
+    if npc.npc_time == 0 and item.npc_collide(npc, item, level) == False:
+        npc.stop()
+
+    if move_key:
+        move()
     delay(0.025)
 
 def resume():
@@ -108,8 +132,8 @@ def pause():
     pass
 
 def change_event():
-    global  player, background
-    global  cur_event
+    global player, background
+    global cur_event
     if player.dir == dir_table[LEFT_MOVE] and player.x <= 400 and cur_event == 'CHARACTER_MOVE' and background.x >= 800:
         player.x = 400
         cur_event = 'BACKGROUND_MOVE'
@@ -151,7 +175,7 @@ def move():
     change_event()
 
 def change_level():
-    global player, background, image, fire, menu, npc_image, npc
+    global player, background, back_image, fire, menu, item_image, npc, npc_image
     global cur_event,cur_time, time
     global level
     if level % 2 == 1:
@@ -170,27 +194,32 @@ def change_level():
         cur_event = data['RIGHT']['StartState']
 
     if level == 2:
-        background.image = image.stage2
-        npc.present = npc_image.item2
+        background.image = back_image.stage2
+        npc.present = item_image.item2
     elif level == 3:
-        background.image = image.stage3
-        npc.present = npc_image.item3
+        background.image = back_image.stage3
+        npc.present = item_image.item3
     elif level == 4:
-        background.image = image.stage4
-        npc.present = npc_image.item4
+        background.image = back_image.stage4
+        npc.present = item_image.item4
     elif level == 5:
-        background.image = image.stage5
-        npc.present = npc_image.item5
+        background.image = back_image.stage5
+        npc.present = item_image.item5
 
     for f in fire:
         f.change_stage()
 
     time = 0
+    npc.change_level(level)
+    npc.image = npc_image.npc_image
+
     menu.time = time
     cur_time = get_time()
 
 def handle_events():
     global player, background, item
+    global move_key
+
     events = get_events()
     for event in events:
         if event.type == SDL_QUIT:
@@ -201,11 +230,11 @@ def handle_events():
             if event.key == SDLK_RIGHT:
                 player.dir = dir_table[RIGHT_MOVE]
                 background.dir = dir_table[RIGHT_MOVE]
-                move()
+                move_key = True
             elif event.key == SDLK_LEFT:
                 player.dir = dir_table[LEFT_MOVE]
                 background.dir = dir_table[LEFT_MOVE]
-                move()
+                move_key = True
             elif event.key == SDLK_DOWN:
                 if player.dir == dir_table[LEFT_MOVE]:
                     player.dir = dir_table[LEFT_STOP]
@@ -215,6 +244,11 @@ def handle_events():
                     player.dir = dir_table[LEFT_STOP]
                 else:
                     player.dir = dir_table[RIGHT_STOP]
+        if event.type == SDL_KEYUP:
+            if event.key == SDLK_RIGHT:
+                move_key = False
+            elif event.key == SDLK_LEFT:
+                move_key = False
         item.event_hanble(event)
 
 def draw():
@@ -235,16 +269,6 @@ def draw():
         player.draw_crown_right_bb()
         player.draw_dress_right_bb()
     npc.draw()
+    npc.draw_bb()
     item.draw()
     update_canvas()
-
-def collide(a, b, state, num):
-    left_a, bottom_a, right_a, top_a = a.get_bb(state, num)
-    left_b, bottom_b, right_b, top_b = b.get_bb()
-
-    if state == 2 or state == 3 : return False
-    if left_a > right_b : return False
-    if right_a < left_b : return False
-    if top_a < bottom_b : return  False
-    if bottom_a > top_b : return  False
-    return True
