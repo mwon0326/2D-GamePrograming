@@ -52,7 +52,7 @@ class Item:
         if self.draw5:
             self.item5.draw(self.x5, self.y5)
 
-    def event_hanble(self, event):
+    def event_handle(self, event):
         global mouse
         if event.type == SDL_MOUSEBUTTONDOWN and event.button == SDL_BUTTON_LEFT:
             if self.mouse_collide(event.x, 600 - event.y):

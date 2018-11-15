@@ -35,6 +35,7 @@ class Fire:
         self.minSpeed = speed_table[self.next_stage][MIN]
         self.maxSpeed = speed_table[self.next_stage][MAX]
         self.cur_stage = self.next_stage
+        self.y = 575
 
     def update(self):
         self.y = self.y + (self.speed * -1)

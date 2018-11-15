@@ -35,3 +35,13 @@ class StageImage:
         self.stage3 = load_image('resource/stage3.png')
         self.stage4 = load_image('resource/stage4.png')
         self.stage5 = load_image('resource/stage5.png')
+        self.stage_clear_normal = load_image('resource/stageC.png')
+        self.stage_clear_enter = load_image('resource/stageCS.png')
+        self.stage_clear_press = load_image('resource/stageP.png')
+        self.stage_success_normal = load_image('resource/stage_success_normal.png')
+        self.stage_success_enter = load_image('resource/stage_success_enter.png')
+        self.stage_success_press = load_image('resource/stage_success_press.png')
+        self.stage_fail_normal = load_image('resource/fail_normal.png')
+        self.stage_fail_enter = load_image('resource/fail_enter.png')
+        self.stage_fail_press = load_image('resource/fail_press.png')
+

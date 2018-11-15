@@ -11,7 +11,7 @@ class NPC:
         self.cartoon2 = None
         self.time = 0
         self.npc_time = 12
-        self.x, self.y = 200, 350
+        self.x, self.y = 180, 350
         self.cx, self.cy = 300, 450
         self.px, self.py = 302, 475
         self.cx2, self.cy2 = 330, 350
@@ -33,12 +33,12 @@ class NPC:
 
     def change_level(self, level):
         if level % 2 == 1:
-            self.x, self.y = 200, 350
+            self.x, self.y = 180, 350
             self.cx, self.cy = 300, 450
             self.px, self.py = 302, 475
             self.cx2, self.cy2 = 330, 350
         elif level % 2 == 0:
-            self.x, self.y = 600, 350
+            self.x, self.y = 620, 350
             self.cx, self.cy = 500, 450
             self.px, self.py = 498, 475
             self.cx2, self.cy2 = 470, 350
@@ -46,7 +46,7 @@ class NPC:
         self.is_collide = True
 
     def timer(self):
-        self.npc_time = 12 - self.time
+        self.npc_time = 8 - self.time
         if self.time >= 3 and self.is_collide:
             self.is_draw = True
         else:
