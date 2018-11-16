@@ -67,7 +67,7 @@ def enter():
 
     itembox_image = load_image('resource/menu.png')
     fire_image = load_image('resource/fire.png')
-    title_image = load_image('../image/title.png')
+    title_image = load_image('resource/title.png')
 
 def exit():
     pass
