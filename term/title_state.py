@@ -1,6 +1,6 @@
 from pico2d import *
 import game_framework
-import game
+import game_state
 import logo_state
 Image = None
 
@@ -23,7 +23,7 @@ def handle_events():
     for e in events:
         if e.type == SDL_KEYDOWN:
             if e.key == SDLK_SPACE:
-                game_framework.change_state(game)
+                game_framework.change_state(game_state)
         elif e.type == SDL_QUIT:
                 game_framework.quit()
 

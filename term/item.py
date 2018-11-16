@@ -1,5 +1,5 @@
 from pico2d import *
-from npc_state import NPC
+from npc import NPC
 import logo_state
 
 ITEM1, ITEM2, ITEM3, ITEM4, ITEM5 = range(5)
