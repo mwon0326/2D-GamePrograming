@@ -123,14 +123,14 @@ def update():
     if item.npc_collide(npc, item, level) and npc.is_draw:
         npc.is_item_collide = True
         for f in fire:
-            f.speed = f.success_speed
+            f.speed_check = 1
         npc.image = logo_state.npc_image2
         npc.stop()
         item.stop()
 
     if npc.npc_time == 0 and npc.is_item_collide == False:
         for f in fire:
-            f.speed = f.fail_speed
+            f.speed_check = 2
         npc.stop()
 
     if move_key:

@@ -28,6 +28,7 @@ class Fire:
         self.success_speed = self.speed - 2
         self.fail_speed = self.speed + 2
         self.next_stage = None
+        self.speed_check = 0
 
     def draw(self):
         Fire.image.draw(self.x, self.y)
@@ -38,13 +39,25 @@ class Fire:
         self.maxSpeed = speed_table[self.next_stage][MAX]
         self.cur_stage = self.next_stage
         self.y = 575
+        self.speed = random.randint(self.minSpeed, self.maxSpeed)
+        self.fail_speed = self.speed + 2
+        self.success_speed = self.speed - 2
+        self.speed_check = 0
 
     def update(self):
         self.y = self.y + (self.speed * -1)
         if self.y <= 0:
             self.x = random.randint(150, 650)
             self.y = 575
-            self.speed = random.randint(self.minSpeed, self.maxSpeed)
+            self.speed = random.randint(
+                self.minSpeed, self.maxSpeed)
+            self.success_speed = self.speed - 2
+            self.fail_speed = self.speed + 2
+            if self.speed_check == 1:
+                self.speed = self.success_speed
+            elif self.speed_check == 2:
+                self.speed = self.fail_speed
+            print(self.speed)
 
     def get_bb(self):
         return self.x - 10, self.y - 25, self.x + 10, self.y + 25
