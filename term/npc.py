@@ -11,10 +11,10 @@ class NPC:
         self.cartoon2 = None
         self.time = 0
         self.npc_time = 12
-        self.x, self.y = 180, 350
-        self.cx, self.cy = 300, 450
-        self.px, self.py = 302, 475
-        self.cx2, self.cy2 = 330, 350
+        self.x, self.y = 180, 400
+        self.cx, self.cy = 300, 500
+        self.px, self.py = 302, 525
+        self.cx2, self.cy2 = 330, 400
         self.font = logo_state.f
         self.stage_in = False
         self.is_collide = True
@@ -33,15 +33,15 @@ class NPC:
 
     def change_level(self, level):
         if level % 2 == 1:
-            self.x, self.y = 180, 350
-            self.cx, self.cy = 300, 450
-            self.px, self.py = 302, 475
-            self.cx2, self.cy2 = 330, 350
+            self.x, self.y = 150, 400
+            self.cx, self.cy = 280, 500
+            self.px, self.py = 282, 525
+            self.cx2, self.cy2 = 310, 400
         elif level % 2 == 0:
-            self.x, self.y = 620, 350
-            self.cx, self.cy = 500, 450
-            self.px, self.py = 498, 475
-            self.cx2, self.cy2 = 470, 350
+            self.x, self.y = 600, 400
+            self.cx, self.cy = 480, 500
+            self.px, self.py = 478, 525
+            self.cx2, self.cy2 = 450, 400
         self.time = 0
         self.is_collide = True
 

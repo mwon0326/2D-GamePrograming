@@ -57,7 +57,6 @@ class Fire:
                 self.speed = self.success_speed
             elif self.speed_check == 2:
                 self.speed = self.fail_speed
-            print(self.speed)
 
     def get_bb(self):
         return self.x - 10, self.y - 25, self.x + 10, self.y + 25

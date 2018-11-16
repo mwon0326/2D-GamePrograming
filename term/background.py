@@ -88,9 +88,9 @@ class Stage:
         if (event.type, event.button) == (SDL_MOUSEBUTTONDOWN, SDL_BUTTON_LEFT):
             if self.popup_collide(self, event.x, 600 - event.y) and self.is_clear:
                 self.press = True
-                self.is_change_level = True
         elif (event.type, event.button) == (SDL_MOUSEBUTTONUP, SDL_BUTTON_LEFT):
             self.press = False
+            self.is_change_level = True
         self.image_change(level)
 
 class Fail:
@@ -131,7 +131,7 @@ class Fail:
         if (event.type, event.button) == (SDL_MOUSEBUTTONDOWN, SDL_BUTTON_LEFT):
             if self.popup_collide(self, event.x, 600 - event.y):
                 self.press = True
-                game_framework.change_state(title_state)
         elif (event.type, event.button) == (SDL_MOUSEBUTTONUP, SDL_BUTTON_LEFT):
             self.press = False
+            game_framework.change_state(title_state)
         self.image_change()
