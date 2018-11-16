@@ -1,7 +1,6 @@
 from pico2d import *
 import game_framework
 from player_state import Player
-from image_state import *
 from fire_state import Fire
 from background_state import *
 from npc_state import NPC
@@ -9,6 +8,7 @@ from item_state import Item
 import title_state
 import json
 import time
+import logo_state
 
 player = None
 fire = None
@@ -17,10 +17,6 @@ npc = None
 menu = None
 stage = None
 cur_event = None
-npc_image = None
-back_image = None
-item_image = None
-stage_image = None
 fail_stage = None
 item = None
 level = 1
@@ -42,7 +38,7 @@ dir_table = {
 }
 
 def enter():
-    global player, background, back_image, fire, menu, npc, npc_image, item, item_image, stage_image, stage, fail_stage
+    global player, background, fire, menu, npc, item, stage, fail_stage
     global cur_event
     global level, time, cur_time, timer
     global data
@@ -50,13 +46,9 @@ def enter():
 
     player = Player()
     background = BackGround()
-    back_image = BackGroundImage()
     menu = ItemBox()
     npc = NPC()
-    npc_image = NPCImage()
     item = Item()
-    item_image = ItemImage()
-    stage_image = StageImage()
     stage = Stage()
     fail_stage = Fail()
     level = 1
@@ -69,7 +61,7 @@ def enter():
     player.frame = data['LEFT']['frame']
     player.dir = data['LEFT']['dir']
 
-    background.image = back_image.stage1
+    background.image = logo_state.stage1
     background.dir = data['LEFT']['dir']
     background.x = data['LEFT']['backX']
 
@@ -78,28 +70,23 @@ def enter():
     cur_time = get_time()
     timer = 0
 
-    npc.image = npc_image.npc_image
-    npc.cartoon = npc_image.npc_bubble
-    npc.cartoon2 = npc_image.npc_bubble2
-    npc.present = item_image.item1
+    npc.image = logo_state.npc_image1
+    npc.cartoon = logo_state.npc_bubble
+    npc.cartoon2 = logo_state.npc_bubble2
+    npc.present = logo_state.item1
 
-    stage.stage_image = stage_image.stage1
-    stage.clear_image = stage_image.stage_clear_normal
+    stage.stage_image = logo_state.stage1_mb
+    stage.clear_image = logo_state.stage_clear_normal
 
     move_key = False
     control = False
     fail = False
 
 def exit():
-    global player, background, back_image, fire, menu
-    del player
-    del background
-    del back_image
-    del fire
-    del menu
+    pass
 
 def update():
-    global fire, player, menu, npc, item, npc_image, stage
+    global fire, player, menu, npc, item, stage
     global cur_time, time, timer, level
     global move_key, control, fail
 
@@ -107,17 +94,17 @@ def update():
         if control:
             f.update()
         if f.player_collide(player, f, player.dir, 1):
-            print("충돌")
-            fail = True
             control = False
+            fail = True
+            move_key = False
         elif f.player_collide(player, f, player.dir, 2):
-            print("충돌")
-            fail = True
             control = False
+            fail = True
+            move_key = False
         elif f.player_collide(player, f, player.dir, 3):
-            print("충돌")
-            fail = True
             control = False
+            fail = True
+            move_key = False
 
     t = get_time()
     if t - cur_time >= 1:
@@ -129,16 +116,21 @@ def update():
         npc.time = timer
         npc.timer()
 
-    if time > 1 and stage.is_clear == False:
+    if time > 1 and stage.is_clear == False and fail == False:
         control = True
         stage.is_stage_draw = False
 
     if item.npc_collide(npc, item, level) and npc.is_draw:
-        npc.image = npc_image.npc_image2
+        npc.is_item_collide = True
+        for f in fire:
+            f.speed = f.success_speed
+        npc.image = logo_state.npc_image2
         npc.stop()
         item.stop()
 
-    if npc.npc_time == 0 and item.npc_collide(npc, item, level) == False:
+    if npc.npc_time == 0 and npc.is_item_collide == False:
+        for f in fire:
+            f.speed = f.fail_speed
         npc.stop()
 
     if move_key:
@@ -174,12 +166,13 @@ def change_event():
         cur_event = 'CHARACTER_MOVE'
 
 def stage_clear():
-    global stage, stage_image
+    global stage, npc
     global control, move_key
     global level
     if level == 6:
-        stage.clear_image = stage_image.stage_success_normal
+        stage.clear_image = logo_state.stage_success_normal
 
+    npc.is_item_collide = False
     stage.is_clear = True
     control = False
     move_key = False
@@ -212,7 +205,7 @@ def move():
     change_event()
 
 def change_level():
-    global player, background, back_image, fire, menu, item_image, npc, npc_image, stage, stage_image
+    global player, background, fire, menu, npc,  stage
     global cur_event,cur_time, time, timer
     global level
     global control, move_key
@@ -233,21 +226,21 @@ def change_level():
         cur_event = data['RIGHT']['StartState']
 
     if level == 2:
-        background.image = back_image.stage2
-        npc.present = item_image.item2
-        stage.stage_image = stage_image.stage2
+        background.image = logo_state.stage2
+        npc.present = logo_state.item2
+        stage.stage_image = logo_state.stage2_mb
     elif level == 3:
-        background.image = back_image.stage3
-        npc.present = item_image.item3
-        stage.stage_image = stage_image.stage3
+        background.image = logo_state.stage3
+        npc.present = logo_state.item3
+        stage.stage_image = logo_state.stage3_mb
     elif level == 4:
-        background.image = back_image.stage4
-        npc.present = item_image.item4
-        stage.stage_image = stage_image.stage4
+        background.image = logo_state.stage4
+        npc.present = logo_state.item4
+        stage.stage_image = logo_state.stage4_mb
     elif level == 5:
-        background.image = back_image.stage5
-        npc.present = item_image.item5
-        stage.stage_image = stage_image.stage5
+        background.image = logo_state.stage5
+        npc.present = logo_state.item5
+        stage.stage_image = logo_state.stage5_mb
 
     for f in fire:
         f.change_stage()
@@ -255,7 +248,7 @@ def change_level():
     time = 0
     timer = 0
     npc.change_level(level)
-    npc.image = npc_image.npc_image
+    npc.image = logo_state.npc_image1
 
     control = False
     stage.is_stage_draw = True
@@ -319,8 +312,9 @@ def draw():
     player.draw()
     for f in fire:
         f.draw()
-        f.draw_bb()
+        #f.draw_bb()
     menu.draw()
+    '''
     if player.dir == dir_table[LEFT_MOVE] or player.dir == dir_table[LEFT_STOP]:
         player.draw_face_left_bb()
         player.draw_crown_left_bb()
@@ -329,11 +323,12 @@ def draw():
         player.draw_face_right_bb()
         player.draw_crown_right_bb()
         player.draw_dress_right_bb()
+    '''
     npc.draw()
-    npc.draw_bb()
+    #npc.draw_bb()
     item.draw()
     stage.draw()
-    stage.draw_bb()
+    #stage.draw_bb()
     if fail:
         fail_stage.draw()
     update_canvas()

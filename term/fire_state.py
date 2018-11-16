@@ -1,6 +1,7 @@
 from pico2d import *
 import game_framework
 import random
+import logo_state
 
 STAGE1, STAGE2, STAGE3, STAGE4, STAGE5 = range(5)
 MIN, MAX = range(2)
@@ -17,14 +18,15 @@ class Fire:
     image = None
 
     def __init__(self):
-        if Fire.image == None:
-            Fire.image = load_image('resource/fire.png')
+        Fire.image = logo_state.fire_image
         self.x = random.randint(150, 650)
         self.y = 575
         self.minSpeed = speed_table[STAGE1][MIN]
         self.maxSpeed = speed_table[STAGE1][MAX]
         self.cur_stage = STAGE1
         self.speed = random.randint(self.minSpeed, self.maxSpeed)
+        self.success_speed = self.speed - 2
+        self.fail_speed = self.speed + 2
         self.next_stage = None
 
     def draw(self):

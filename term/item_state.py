@@ -1,6 +1,6 @@
 from pico2d import *
-from image_state import ItemImage
 from npc_state import NPC
+import logo_state
 
 ITEM1, ITEM2, ITEM3, ITEM4, ITEM5 = range(5)
 x, y = range(2)
@@ -17,12 +17,11 @@ class Item:
     item = None
     mouse = None
     def __init__(self):
-        Item.item = ItemImage()
-        self.item1 = Item.item.item1
-        self.item2 = Item.item.item2
-        self.item3 = Item.item.item3
-        self.item4 = Item.item.item4
-        self.item5 = Item.item.item5
+        self.item1 = logo_state.item1
+        self.item2 = logo_state.item2
+        self.item3 = logo_state.item3
+        self.item4 = logo_state.item4
+        self.item5 = logo_state.item5
 
         self.x1, self.y1 = item_table[ITEM1][x], item_table[ITEM1][y]
         self.x2, self.y2 = item_table[ITEM2][x], item_table[ITEM2][y]

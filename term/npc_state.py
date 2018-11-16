@@ -1,7 +1,7 @@
 from pico2d import *
 import game_framework
 import random
-from image_state import Font
+import logo_state
 
 class NPC:
     def __init__(self):
@@ -15,10 +15,10 @@ class NPC:
         self.cx, self.cy = 300, 450
         self.px, self.py = 302, 475
         self.cx2, self.cy2 = 330, 350
-        self.ft = Font()
-        self.font = self.ft.f
+        self.font = logo_state.f
         self.stage_in = False
         self.is_collide = True
+        self.is_item_collide= False
         self.is_draw = False
         self.left_a, self.bottom_a, self.right_a, self.top_a = 0, 0, 0, 0
         self.left_b, self.bottom_b, self.right_b, self.top_b = 0, 0, 0, 0

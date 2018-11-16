@@ -1,21 +1,20 @@
 from pico2d import *
 import game_framework
 import game
-
-image = None
+import logo_state
+Image = None
 
 def enter():
-    global  image
-    open_canvas()
-    image = load_image('../image/title.png')
+    global Image
+    Image = logo_state.title_image
 
 def update():
     pass
 
 def draw():
-    global  image
+    global Image
     clear_canvas()
-    image.draw(400, 300)
+    Image.draw(400, 300)
     update_canvas()
 
 def handle_events():
@@ -35,5 +34,5 @@ def resume():
     pass
 
 def exit():
-    global image
-    del(image)
+    global Image
+    del(Image)
