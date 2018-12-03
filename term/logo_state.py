@@ -16,6 +16,8 @@ menu_image = None
 title_image = None
 player_image = None
 progress_bar = None
+key_image = None
+gate_image = None
 
 time = 0.0
 image = None
@@ -31,10 +33,11 @@ def enter():
     global stage_fail_normal, stage_fail_enter, stage_fail_press
     global stage_success_normal, stage_success_enter, stage_success_press
     global image, fire_image, menu_image, title_image
-    global player_image, item_box, progress_bar
+    global player_image, item_box, progress_bar, key_image, gate_image
 
     image = load_image('resource/kpu_credit.png')
     player_image = load_image('resource/animation.png')
+    gate_image = load_image('resource/gate.png')
 
     stage1 = load_image('resource/노을.png')
     stage2 = load_image('resource/저녁.png')
@@ -76,6 +79,7 @@ def enter():
     item_box = load_image('resource/item_box.png')
 
     progress_bar = load_image('resource/progress_bar.png')
+    key_image = load_image('resource/key.png')
 def exit():
     pass
 

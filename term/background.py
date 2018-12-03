@@ -11,20 +11,28 @@ class BackGround:
     def draw(self):
         self.image.draw(400, 300)
 
+    def changeLevel(self, level):
+        if level == 2:
+            self.image = logo_state.stage2
+        elif level == 3:
+            self.image = logo_state.stage3
+        elif level == 4:
+            self.image = logo_state.stage4
+        elif level == 5:
+            self.image = logo_state.stage5
+
     def update(self):
         pass
 
 class StateBox:
     def __init__(self):
         self.image = logo_state.menu_image
-        self.font = logo_state.f
         self.time = 0
         self.x = 130
         self.y = 50
 
     def draw(self):
         self.image.draw(400, 50)
-        self.font.draw(self.x, self.y, '%d' % self.time, (0, 0, 0))
 
     def update(self):
         pass
