@@ -1,26 +1,58 @@
 from pico2d import *
 import game_framework
+import logo_state
+import time
 
 class Player:
+    SPEED = 300
+    MARGIN = 75
+    POSY = 250
     def __init__(self):
-        self.image = load_image('resource/animation.png')
-        self.x, self.y = 200, 250
+        self.image = logo_state.player_image
+        self.x, self.y = 0, Player.POSY
+        self.dx= 0
         self.frame = 0
-        self.dir = 1
+        self.image_index = 1
         self.speed = 5
+        self.stage_width = get_canvas_width()
+        self.time = 0
+        self.fps = 5
+        self.is_move = 0
 
     def draw(self):
-        self.image.clip_draw(self.frame * 150, self.dir * 250, 150, 250, self.x, self.y)
+        if self.dx < 0 : self.image_index = 1
+        if self.dx > 0 : self.image_index = 0
+        if self.dx == 0 and self.is_move == 0:
+            if self.image_index in [1, 3]: self.image_index = 5
+            elif self.image_index in [0, 2] : self.image_index = 4
+        if self.dx == 0 and self.is_move == 1:
+            if self.image_index in [1, 3, 5]: self.image_index = 3
+            elif self.image_index in [0, 2, 4]: self.image_index = 2
 
-    def move(self):
-        if self.dir == 1:
-            self.x -= self.speed
-        else:
-            self.x += self.speed
-        self.frame = (self.frame + 1) % 4
+        self.image.clip_draw(self.frame * 150, self.image_index * 250, 150, 250, self.x, self.y)
 
-    def motion(self):
-        self.frame = (self.frame + 1) % 4
+    def update(self):
+        distance = Player.SPEED * game_framework.frame_time
+        self.x += (self.dx * distance)
+        self.x = clamp(Player.MARGIN, self.x, self.stage_width - Player.MARGIN)
+        self.time += game_framework.frame_time
+        self.frame = round(self.time * self.fps) % 4
+
+    def handle_events(self, event):
+        if event.type == SDL_KEYDOWN:
+            if event.key == SDLK_a:
+                self.dx -= 1
+            elif event.key == SDLK_d:
+                self.dx += 1
+            elif event.key == SDLK_s:
+                self.is_move = 1
+        if event.type == SDL_KEYUP:
+            if event.key == SDLK_a:
+                self.dx += 1
+            elif event.key == SDLK_d:
+                self.dx -= 1
+            elif event.key == SDLK_s:
+                self.is_move = 0
 
     def get_bb(self, state, num):
         if state == 1:

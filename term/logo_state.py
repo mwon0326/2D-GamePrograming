@@ -4,15 +4,18 @@ import title_state
 
 stage1, stage2, stage3, stage4, stage5 = None, None, None, None, None
 npc_image1, npc_image2, npc_bubble, npc_bubble2 = None, None, None, None
-item1, item2, item3, item4, item5 = None, None, None, None, None
+black, red, pink, yellow, blue = None, None, None, None, None
 f = None
 stage1_mb, stage2_mb, stage3_mb, stage4_mb, stage5_mb = None, None, None, None, None
 stage_clear_press, stage_clear_normal, stage_clear_enter = None, None, None
 stage_fail_normal, stage_fail_enter, stage_fail_press = None, None, None
 stage_success_normal, stage_success_enter, stage_success_press = None, None, None
 fire_image = None
-itembox_image = None
+item_box = None
+menu_image = None
 title_image = None
+player_image = None
+progress_bar = None
 
 time = 0.0
 image = None
@@ -21,15 +24,17 @@ name = "logo_state"
 def enter():
     global stage1, stage2, stage3, stage4, stage5
     global npc_image1, npc_image2, npc_bubble, npc_bubble2
-    global item1, item2, item3, item4, item5
+    global black, pink, yellow, red, blue
     global f
     global stage1_mb, stage2_mb, stage3_mb, stage4_mb, stage5_mb
     global stage_clear_press, stage_clear_normal, stage_clear_enter
     global stage_fail_normal, stage_fail_enter, stage_fail_press
     global stage_success_normal, stage_success_enter, stage_success_press
-    global image, fire_image, itembox_image, title_image
+    global image, fire_image, menu_image, title_image
+    global player_image, item_box, progress_bar
 
     image = load_image('resource/kpu_credit.png')
+    player_image = load_image('resource/animation.png')
 
     stage1 = load_image('resource/노을.png')
     stage2 = load_image('resource/저녁.png')
@@ -42,11 +47,11 @@ def enter():
     npc_bubble = load_image('resource/말풍선.png')
     npc_bubble2 = load_image('resource/말풍선2.png')
 
-    item1 = load_image('resource/item_black.png')
-    item2= load_image('resource/item_pink.png')
-    item3 = load_image('resource/item_yellow.png')
-    item4 = load_image('resource/item_red.png')
-    item5 = load_image('resource/item_blue.png')
+    black = load_image('resource/item_black.png')
+    pink= load_image('resource/item_pink.png')
+    yellow = load_image('resource/item_yellow.png')
+    red = load_image('resource/item_red.png')
+    blue = load_image('resource/item_blue.png')
 
     f = load_font('resource/DIEHLDA.ttf', 25)
 
@@ -65,10 +70,12 @@ def enter():
     stage_fail_enter = load_image('resource/fail_enter.png')
     stage_fail_press = load_image('resource/fail_press.png')
 
-    itembox_image = load_image('resource/menu.png')
+    menu_image = load_image('resource/menu.png')
     fire_image = load_image('resource/fire.png')
     title_image = load_image('resource/title.png')
+    item_box = load_image('resource/item_box.png')
 
+    progress_bar = load_image('resource/progress_bar.png')
 def exit():
     pass
 

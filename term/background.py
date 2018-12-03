@@ -6,23 +6,17 @@ import title_state
 
 class BackGround:
     def __init__(self):
-        self.image = None
-        self.x = 800
-        self.dir = 1
-        self.speed = 5
+        self.image = logo_state.stage1
 
     def draw(self):
-        self.image.clip_draw(self.x, 0, 800, 500, 400, 350)
+        self.image.draw(400, 300)
 
-    def move(self):
-        if self.dir == 1:
-            self.x -= self.speed
-        else:
-            self.x += self.speed
+    def update(self):
+        pass
 
-class ItemBox:
+class StateBox:
     def __init__(self):
-        self.image = logo_state.itembox_image
+        self.image = logo_state.menu_image
         self.font = logo_state.f
         self.time = 0
         self.x = 130
@@ -31,6 +25,9 @@ class ItemBox:
     def draw(self):
         self.image.draw(400, 50)
         self.font.draw(self.x, self.y, '%d' % self.time, (0, 0, 0))
+
+    def update(self):
+        pass
 
 class Stage:
     def __init__(self):

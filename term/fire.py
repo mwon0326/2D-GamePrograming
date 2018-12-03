@@ -2,61 +2,26 @@ from pico2d import *
 import game_framework
 import random
 import logo_state
-
-STAGE1, STAGE2, STAGE3, STAGE4, STAGE5 = range(5)
-MIN, MAX = range(2)
-speed_table = {
-                STAGE1 : {MIN : 5, MAX : 8},
-                STAGE2 : {MIN : 7, MAX : 9},
-                STAGE3 : {MIN : 9, MAX : 11},
-                STAGE4 : {MIN : 11, MAX : 13},
-                STAGE5 : {MIN : 13, MAX : 15}}
-
-next_stage_table = {STAGE1 : STAGE2, STAGE2 : STAGE3, STAGE3 : STAGE4, STAGE4 : STAGE5}
+import game_world
+import game_framework
 
 class Fire:
     image = None
-
-    def __init__(self):
+    SPEED = 200
+    BOTTOM = 120
+    def __init__(self, level):
         Fire.image = logo_state.fire_image
         self.x = random.randint(150, 650)
         self.y = 575
-        self.minSpeed = speed_table[STAGE1][MIN]
-        self.maxSpeed = speed_table[STAGE1][MAX]
-        self.cur_stage = STAGE1
-        self.speed = random.randint(self.minSpeed, self.maxSpeed)
-        self.success_speed = self.speed - 2
-        self.fail_speed = self.speed + 2
-        self.next_stage = None
-        self.speed_check = 0
+        self.speed = 0.5 + (random.random() * level)
 
     def draw(self):
         Fire.image.draw(self.x, self.y)
 
-    def change_stage(self):
-        self.next_stage = next_stage_table[self.cur_stage]
-        self.minSpeed = speed_table[self.next_stage][MIN]
-        self.maxSpeed = speed_table[self.next_stage][MAX]
-        self.cur_stage = self.next_stage
-        self.y = 575
-        self.speed = random.randint(self.minSpeed, self.maxSpeed)
-        self.fail_speed = self.speed + 2
-        self.success_speed = self.speed - 2
-        self.speed_check = 0
-
     def update(self):
-        self.y = self.y + (self.speed * -1)
-        if self.y <= 0:
-            self.x = random.randint(150, 650)
-            self.y = 575
-            self.speed = random.randint(
-                self.minSpeed, self.maxSpeed)
-            self.success_speed = self.speed - 2
-            self.fail_speed = self.speed + 2
-            if self.speed_check == 1:
-                self.speed = self.success_speed
-            elif self.speed_check == 2:
-                self.speed = self.fail_speed
+        self.y += -1 * game_framework.frame_time * self.speed * Fire.SPEED
+        if self.y < Fire.BOTTOM:
+            game_world.remove_object(self)
 
     def get_bb(self):
         return self.x - 10, self.y - 25, self.x + 10, self.y + 25
@@ -64,7 +29,7 @@ class Fire:
     def draw_bb(self):
         draw_rectangle(*self.get_bb())
 
-    def player_collide(self, a, b, state, num):
+    def collide(self, a, b, state, num):
         left_a, bottom_a, right_a, top_a = a.get_bb(state, num)
         left_b, bottom_b, right_b, top_b = b.get_bb()
 
