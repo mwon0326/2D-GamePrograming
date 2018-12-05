@@ -3,7 +3,7 @@ from pico2d import *
 import title_state
 
 stage1, stage2, stage3, stage4, stage5 = None, None, None, None, None
-npc_image1, npc_image2, npc_bubble, npc_bubble2 = None, None, None, None
+npc_image1 = None
 black, red, pink, yellow, blue = None, None, None, None, None
 f = None
 stage1_mb, stage2_mb, stage3_mb, stage4_mb, stage5_mb = None, None, None, None, None
@@ -18,6 +18,7 @@ player_image = None
 progress_bar = None
 key_image = None
 gate_image = None
+start_ui_normal, start_ui_enter, start_ui_press = None, None, None
 
 time = 0.0
 image = None
@@ -25,7 +26,7 @@ name = "logo_state"
 
 def enter():
     global stage1, stage2, stage3, stage4, stage5
-    global npc_image1, npc_image2, npc_bubble, npc_bubble2
+    global npc_image1
     global black, pink, yellow, red, blue
     global f
     global stage1_mb, stage2_mb, stage3_mb, stage4_mb, stage5_mb
@@ -34,6 +35,7 @@ def enter():
     global stage_success_normal, stage_success_enter, stage_success_press
     global image, fire_image, menu_image, title_image
     global player_image, item_box, progress_bar, key_image, gate_image
+    global start_ui_enter, start_ui_normal, start_ui_press
 
     image = load_image('resource/kpu_credit.png')
     player_image = load_image('resource/animation.png')
@@ -46,9 +48,6 @@ def enter():
     stage5 = load_image('resource/아침.png')
 
     npc_image1 = load_image('resource/npc.png')
-    npc_image2 = load_image('resource/npc_clear.png')
-    npc_bubble = load_image('resource/말풍선.png')
-    npc_bubble2 = load_image('resource/말풍선2.png')
 
     black = load_image('resource/item_black.png')
     pink= load_image('resource/item_pink.png')
@@ -80,6 +79,11 @@ def enter():
 
     progress_bar = load_image('resource/progress_bar.png')
     key_image = load_image('resource/key.png')
+
+    start_ui_normal = load_image('resource/start_ui_normal.png')
+    start_ui_enter = load_image('resource/start_ui_enter.png')
+    start_ui_press = load_image('resource/start_ui_press.png')
+    
 def exit():
     pass
 

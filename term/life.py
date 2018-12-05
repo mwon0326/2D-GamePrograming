@@ -12,3 +12,13 @@ class Life:
         for i in range(count):
             self.image.draw(self.x, self.y)
             self.x += 70
+
+    def image_change(self, level):
+        if level == 2:
+            self.image = logo_state.pink
+        elif level == 3:
+            self.image = logo_state.black
+        elif level == 4:
+            self.image = logo_state.yellow
+        elif level == 5:
+            self.image = logo_state.blue

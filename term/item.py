@@ -13,7 +13,7 @@ class Item:
         self.x, self.y = 0, 575
         self.speed = 1 + random.random()
         self.setting = False
-        self.item_kind = random.randint(0, 5)
+        self.item_kind = random.randint(0, level + 1)
         self.progress_image = logo_state.progress_bar
         self.progress_index = 9
         self.press_time = 0.0
@@ -57,10 +57,14 @@ class Item:
             if self.progress_index > 9:
                 if self.item_kind == 0: self.image = logo_state.key_image
                 elif self.item_kind == 1:
-                    if self.level == 1:
-                        self.image = logo_state.red
+                    if self.level == 1: self.image = logo_state.red
+                    elif self.level == 2: self.image = logo_state.pink
+                    elif self.level == 3: self.image = logo_state.black
+                    elif self.level == 4: self.image = logo_state.yellow
+                    elif self.level == 5: self.image = logo_state.blue
                 else:
                     self.image = logo_state.npc_image1
+
                 self.animation_index += 1
                 self.setting = False
 

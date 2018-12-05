@@ -13,7 +13,7 @@ class Fire:
         Fire.image = logo_state.fire_image
         self.x = random.randint(150, 650)
         self.y = 575
-        self.speed = 0.5 + (random.random() * level)
+        self.speed = 0.5 + random.random()
 
     def draw(self):
         Fire.image.draw(self.x, self.y)
