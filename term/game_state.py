@@ -23,13 +23,12 @@ level = 1
 life = None
 life_count = 0
 time = 0.0
-random_list = []
 game_state = None
 
 def enter():
     global player, background, state_box, life
     global position_data
-    global life_count
+    global life_count, level
     global time
     global game_state
 
@@ -42,6 +41,7 @@ def enter():
     state_box = StateBox()
     game_world.add_object(state_box, game_world.layer_bg)
 
+    level = 1
     life = Life()
     life_count = 5
     fd = open('start_state.json')
@@ -193,7 +193,11 @@ def handle_events():
                 if e.key == SDLK_SPACE:
                     for i in game_world.objects_at_layer(game_world.layer_item):
                         if i.collide(player, i, player.image_index, 3):
-                            i.press_time += game_framework.frame_time
+                            i.is_press = True
+            elif e.type == SDL_KEYUP:
+                if e.key == SDLK_SPACE:
+                    for i in game_world.objects_at_layer(game_world.layer_item):
+                        i.is_press = False
         elif game_state == GAME_READY:
             if e.type == SDL_KEYDOWN:
                 if e.key == SDLK_SPACE:
@@ -212,8 +216,25 @@ def handle_events():
                 if is_fail : game_framework.change_state(title_state)
 
 def exit():
-    pass
+    global player, background, state_box, life
+    global level
+    global life_count
+    global game_state
+    global position_data
+    global time
 
+    del player
+    del background
+    del state_box
+    del life
+
+    game_world.remove_objects_at_layer(game_world.layer_player)
+    game_world.remove_objects_at_layer(game_world.layer_bg)
+    game_world.remove_objects_at_layer(game_world.layer_message)
+    game_world.remove_objects_at_layer(game_world.layer_item)
+    game_world.remove_objects_at_layer(game_world.layer_obstacle)
+    game_world.remove_objects_at_layer(game_world.layer_gate)
+    position_data = None
 
 
 

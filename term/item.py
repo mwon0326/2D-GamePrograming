@@ -21,6 +21,7 @@ class Item:
         self.animation_index = 0
         self.life_get = False
         self.key_get = False
+        self.is_press = False
         print(self.item_kind)
 
     def item_down_animation(self):
@@ -67,6 +68,9 @@ class Item:
 
                 self.animation_index += 1
                 self.setting = False
+
+        if self.is_press:
+            self.press_time += game_framework.frame_time
 
     def draw(self):
         self.image.draw(self.x, self.y)
