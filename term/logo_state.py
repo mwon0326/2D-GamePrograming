@@ -19,7 +19,8 @@ progress_bar = None
 key_image = None
 gate_image = None
 start_ui_normal, start_ui_enter, start_ui_press = None, None, None
-
+back_sound, effect_sound, intro_sound, clear_sound, ending_success, fail = None, None, None, None, None, None
+collide_sound = None
 time = 0.0
 image = None
 name = "logo_state"
@@ -36,6 +37,7 @@ def enter():
     global image, fire_image, menu_image, title_image
     global player_image, item_box, progress_bar, key_image, gate_image
     global start_ui_enter, start_ui_normal, start_ui_press
+    global back_sound, effect_sound, intro_sound, clear_sound,ending_success, fail, collide_sound
 
     image = load_image('resource/kpu_credit.png')
     player_image = load_image('resource/animation.png')
@@ -83,7 +85,15 @@ def enter():
     start_ui_normal = load_image('resource/start_ui_normal.png')
     start_ui_enter = load_image('resource/start_ui_enter.png')
     start_ui_press = load_image('resource/start_ui_press.png')
-    
+
+    effect_sound = load_wav('resource/item.wav')
+    back_sound = load_music('resource/back.mp3')
+    intro_sound = load_wav('resource/success.wav')
+    clear_sound = load_wav('resource/clear.wav')
+    ending_success = load_wav('resource/victory.wav')
+    fail = load_wav('resource/fail.wav')
+    collide_sound = load_wav('resource/collide.wav')
+
 def exit():
     pass
 

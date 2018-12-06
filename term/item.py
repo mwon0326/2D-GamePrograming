@@ -56,6 +56,8 @@ class Item:
         if self.setting:
             self.progress_index = round(self.press_time * 20)
             if self.progress_index > 9:
+                logo_state.effect_sound.set_volume(32)
+                logo_state.effect_sound.play()
                 if self.item_kind == 0: self.image = logo_state.key_image
                 elif self.item_kind == 1:
                     if self.level == 1: self.image = logo_state.red

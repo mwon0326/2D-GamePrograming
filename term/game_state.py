@@ -4,6 +4,7 @@ import game_world
 from player import Player
 from background import BackGround
 from background import StateBox
+import logo_state
 import title_state
 from fire import Fire
 from life import Life
@@ -24,6 +25,7 @@ life = None
 life_count = 0
 time = 0.0
 game_state = None
+open_gate = False
 
 def enter():
     global player, background, state_box, life
@@ -63,29 +65,42 @@ def GameEnter():
     e = ui.GameStart(level)
     game_state = GAME_READY
     game_world.add_object(e, game_world.layer_message)
+    logo_state.intro_sound.set_volume(32)
+    logo_state.intro_sound.play()
 
 def GamePlay():
     global game_state
     game_state = IN_PLAY
     game_world.remove_objects_at_layer(game_world.layer_message)
+    logo_state.back_sound.set_volume(64)
+    logo_state.back_sound.repeat_play()
 
 def GameEnd():
     global game_state
     game_state = GAME_END
     e = ui.GameEnd()
     game_world.add_object(e, game_world.layer_message)
+    logo_state.back_sound.stop()
+    logo_state.clear_sound.set_volume(32)
+    logo_state.clear_sound.play()
 
 def GameSuccess():
     global game_state
     game_state = GAME_SUCCESS
     e = ui.GameSuccess()
     game_world.add_object(e, game_world.layer_message)
+    logo_state.back_sound.stop()
+    logo_state.ending_success.set_volume(32)
+    logo_state.ending_success.play()
 
 def GameOver():
     global game_state
     game_state = GAME_OVER
     e = ui.GameOver()
     game_world.add_object(e, game_world.layer_message)
+    logo_state.back_sound.stop()
+    logo_state.fail.set_volume(32)
+    logo_state.fail.play()
 
 def CreateFire():
     global level
@@ -99,8 +114,10 @@ def CreateItemBox():
     game_world.add_object(item_box, game_world.layer_item)
 
 def CreateGate():
+    global open_gate
     g = Gate()
     game_world.add_object(g, game_world.layer_gate)
+    open_gate = True
 
 def draw():
     global life, player
@@ -116,6 +133,7 @@ def changeLevel():
     global time
     global game_state
     level += 1
+    print(level)
     background.changeLevel(level)
     life.image_change(level)
 
@@ -143,7 +161,7 @@ def update():
     global life_count, level
     global time
     global game_state
-    global random_list
+    global open_gate
 
     if game_state == IN_PLAY:
         time += game_framework.frame_time
@@ -173,22 +191,27 @@ def update():
         item_count = game_world.count_at_layer(game_world.layer_item)
         if level * 5 < time and item_count < 1:
             CreateItemBox()
-
-        for g in game_world.objects_at_layer(game_world.layer_gate):
-            for p in range(1, 4):
-                if g.collide(player, g, player.image_index, p):
-                    if level < 5: GameEnd()
-                    else : GameSuccess()
     delay(0.03)
 
 def handle_events():
     global player
     global game_state
+    global open_gate
     events = get_events()
     for e in events:
         if e.type == SDL_QUIT: game_framework.quit()
         if game_state == IN_PLAY:
             player.handle_events(e)
+            if open_gate:
+                for g in game_world.objects_at_layer(game_world.layer_gate):
+                    is_next = g.handle_events(e, player, player.image_index, 3)
+                    if is_next:
+                        if level < 5:
+                            GameEnd()
+                        else:
+                            GameSuccess()
+                        open_gate = False
+
             if e.type == SDL_KEYDOWN:
                 if e.key == SDLK_SPACE:
                     for i in game_world.objects_at_layer(game_world.layer_item):

@@ -8,6 +8,7 @@ class Gate:
     def __init__(self):
         self.x = random.randint(150, 650)
         self.y = 250
+        self.is_next = False
         self.image = logo_state.gate_image
 
     def draw(self):
@@ -32,4 +33,12 @@ class Gate:
         if top_a < bottom_b: return False
         if bottom_a > top_b: return False
         return True
+
+    def handle_events(self, event, a, state, num):
+        self.is_next = False
+        if event.type == SDL_KEYDOWN:
+            if event.key == SDLK_SPACE and self.collide(a, self, state, num):
+                self.is_next = True
+        return self.is_next
+
 

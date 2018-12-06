@@ -38,4 +38,6 @@ class Fire:
         if right_a < left_b: return False
         if top_a < bottom_b: return False
         if bottom_a > top_b: return False
+        logo_state.collide_sound.set_volume(32)
+        logo_state.collide_sound.play()
         return True
