@@ -13,8 +13,9 @@ import json
 import random
 from gate import Gate
 import ui
+from ui import UI
 
-GAME_READY, IN_PLAY, GAME_END, GAME_SUCCESS, GAME_OVER = range(5)
+GAME_READY, IN_PLAY, GAME_END, GAME_SUCCESS, GAME_OVER, GAME_START = range(6)
 
 player = None
 background = None
@@ -62,7 +63,7 @@ def GameEnter():
     if game_state == GAME_END:
         game_world.remove_objects_at_layer(game_world.layer_message)
 
-    e = ui.GameStart(level)
+    e = UI(level, 1)
     game_state = GAME_READY
     game_world.add_object(e, game_world.layer_message)
     logo_state.intro_sound.set_volume(32)
@@ -78,7 +79,7 @@ def GamePlay():
 def GameEnd():
     global game_state
     game_state = GAME_END
-    e = ui.GameEnd()
+    e = UI(level, 2)
     game_world.add_object(e, game_world.layer_message)
     logo_state.back_sound.stop()
     logo_state.clear_sound.set_volume(32)
@@ -87,7 +88,7 @@ def GameEnd():
 def GameSuccess():
     global game_state
     game_state = GAME_SUCCESS
-    e = ui.GameSuccess()
+    e = UI(level, 3)
     game_world.add_object(e, game_world.layer_message)
     logo_state.back_sound.stop()
     logo_state.ending_success.set_volume(32)
@@ -96,7 +97,7 @@ def GameSuccess():
 def GameOver():
     global game_state
     game_state = GAME_OVER
-    e = ui.GameOver()
+    e = UI(level, 4)
     game_world.add_object(e, game_world.layer_message)
     logo_state.back_sound.stop()
     logo_state.fail.set_volume(32)

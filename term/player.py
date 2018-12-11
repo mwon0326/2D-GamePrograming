@@ -21,11 +21,11 @@ class Player:
 
     def draw(self):
         if self.dx < 0 : self.image_index = 1
-        if self.dx > 0 : self.image_index = 0
-        if self.dx == 0 and self.is_move == 0:
+        elif self.dx > 0 : self.image_index = 0
+        elif self.dx == 0 and self.is_move == 0:
             if self.image_index in [1, 3]: self.image_index = 5
             elif self.image_index in [0, 2] : self.image_index = 4
-        if self.dx == 0 and self.is_move == 1:
+        elif self.dx == 0 and self.is_move == 1:
             if self.image_index in [1, 3, 5]: self.image_index = 3
             elif self.image_index in [0, 2, 4]: self.image_index = 2
 
