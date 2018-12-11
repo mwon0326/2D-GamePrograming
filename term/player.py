@@ -5,8 +5,7 @@ import time
 
 class Player:
     SPEED = 300
-    MARGIN = 75
-    POSY = 250
+    POSY = 210
     def __init__(self):
         self.image = logo_state.player_image
         self.x, self.y = 0, Player.POSY
@@ -29,12 +28,12 @@ class Player:
             if self.image_index in [1, 3, 5]: self.image_index = 3
             elif self.image_index in [0, 2, 4]: self.image_index = 2
 
-        self.image.clip_draw(self.frame * 150, self.image_index * 250, 150, 250, self.x, self.y)
+        self.image.clip_draw(self.frame * 100, self.image_index * 200, 100, 200, self.x, self.y)
 
     def update(self):
         distance = Player.SPEED * game_framework.frame_time
         self.x += (self.dx * distance)
-        self.x = clamp(Player.MARGIN, self.x, self.stage_width - Player.MARGIN)
+        self.x = clamp(50, self.x, self.stage_width - 50)
         self.time += game_framework.frame_time
         self.frame = round(self.time * self.fps) % 4
 
@@ -57,18 +56,18 @@ class Player:
     def get_bb(self, state, num):
         if state == 1:
             if num == 1:
-                return self.x - 33, self.y + 96, self.x - 6, self.y + 114
+                return self.x - 25, self.y + 75, self.x - 6, self.y + 90
             elif num == 2:
-                return self.x - 58, self.y + 17, self.x + 33, self.y + 96
+                return self.x - 40, self.y + 10, self.x + 21, self.y + 75
             else:
-                return self.x - 68, self.y - 100, self.x + 40, self.y - 82
+                return self.x - 43, self.y - 80, self.x + 30, self.y - 68
         else:
             if num == 1:
-                return self.x - 15, self.y + 96, self.x + 11, self.y + 114
+                return self.x - 10, self.y + 77, self.x + 6, self.y + 92
             elif num == 2:
-                return self.x - 58, self.y + 17, self.x + 33, self.y + 96
+                return self.x - 40, self.y + 12, self.x + 21, self.y + 77
             else:
-                return self.x - 67, self.y - 100, self.x + 41, self.y - 82
+                return self.x - 43, self.y - 78, self.x + 30, self.y - 66
 
     def draw_face_left_bb(self):
         draw_rectangle(*self.get_bb(1, 2))
