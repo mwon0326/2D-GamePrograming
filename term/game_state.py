@@ -27,6 +27,7 @@ life_count = 0
 time = 0.0
 game_state = None
 open_gate = False
+key_check = False
 
 def enter():
     global player, background, state_box, life
@@ -34,6 +35,7 @@ def enter():
     global life_count, level
     global time
     global game_state
+    global is_item, key_check, protect
 
     player = Player()
     game_world.add_object(player, game_world.layer_player)
@@ -55,6 +57,9 @@ def enter():
     player.frame = 0
 
     time = 0.0
+    is_item = True
+    key_check = False
+    protect = True
     GameEnter()
 
 def GameEnter():
@@ -111,6 +116,10 @@ def CreateFire():
 def CreateItemBox():
     global level
     item_box = Item(level)
+    if item_box.item_kind == 0:
+        logo_state.key_check = 2
+    elif item_box.item_kind == 3 and logo_state.is_not_protect != 2:
+        logo_state.is_not_protect = 3
     item_box.x = random.randint(2, 10) * 75
     game_world.add_object(item_box, game_world.layer_item)
 
@@ -133,8 +142,8 @@ def changeLevel():
     global level
     global time
     global game_state
+    global is_item
     level += 1
-    print(level)
     background.changeLevel(level)
     life.image_change(level)
 
@@ -155,21 +164,41 @@ def changeLevel():
     player.is_move = 0
 
     time = 0.0
+    is_item = True
+    logo_state.key_check = 1
+    logo_state.is_not_protect = 1
     GameEnter()
+
+t = 0
+is_item = True
 
 def update():
     global player
     global life_count, level
-    global time
+    global time, t
     global game_state
     global open_gate
+    global is_item
 
     if game_state == IN_PLAY:
         time += game_framework.frame_time
         game_world.update()
+
+        for i in game_world.objects_at_layer(game_world.layer_item):
+            if i.life_get:
+                life_count += 1
+                if life_count >= 5:
+                    life_count = 5
+                game_world.remove_object(i)
+            elif i.key_get:
+                CreateGate()
+                i.key_get = False
+
         for f in game_world.objects_at_layer(game_world.layer_obstacle):
             for p in range(1, 4):
-                if f.collide(player, f, player.image_index, p):
+                if f.collide(player, f, player.image_index, p) and logo_state.is_not_protect == 1:
+                    logo_state.collide_sound.set_volume(32)
+                    logo_state.collide_sound.play()
                     life_count -= 1
                     game_world.remove_object(f)
                     if life_count == 0:
@@ -179,19 +208,15 @@ def update():
         if fire_count < level + 2:
             CreateFire()
 
-        for i in game_world.objects_at_layer(game_world.layer_item):
-            if i.life_get:
-                life_count += 1
-                if life_count >= 5:
-                    life_count = 5
-                game_world.remove_object(i)
-            if i.key_get:
-                CreateGate()
-                i.key_get = False
-
         item_count = game_world.count_at_layer(game_world.layer_item)
-        if level * 5 < time and item_count < 1:
+        if item_count < 5 and is_item :
             CreateItemBox()
+            t = time
+            is_item = False
+
+        if time - t > level + 3:
+            is_item = True
+
     delay(0.03)
 
 def handle_events():

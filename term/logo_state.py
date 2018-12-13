@@ -16,15 +16,16 @@ menu_image = None
 title_image = None
 player_image = None
 progress_bar = None
-key_image = None
+key_image, power_up = None, None
 gate_image = None
 start_ui_normal, start_ui_enter, start_ui_press = None, None, None
 back_sound, effect_sound, intro_sound, clear_sound, ending_success, fail = None, None, None, None, None, None
-collide_sound = None
+collide_sound, power_sound = None, None
 time = 0.0
 image = None
 name = "logo_state"
 
+is_not_protect, key_check = None, None
 def enter():
     global stage1, stage2, stage3, stage4, stage5
     global npc_image1
@@ -35,9 +36,10 @@ def enter():
     global stage_fail_normal, stage_fail_enter, stage_fail_press
     global stage_success_normal, stage_success_enter, stage_success_press
     global image, fire_image, menu_image, title_image
-    global player_image, item_box, progress_bar, key_image, gate_image
+    global player_image, item_box, progress_bar, key_image, gate_image, power_up
     global start_ui_enter, start_ui_normal, start_ui_press
-    global back_sound, effect_sound, intro_sound, clear_sound,ending_success, fail, collide_sound
+    global back_sound, effect_sound, intro_sound, clear_sound,ending_success, fail, collide_sound, power_sound
+    global is_not_protect, key_check
 
     image = load_image('resource/kpu_credit.png')
     player_image = load_image('resource/animation.png')
@@ -93,6 +95,12 @@ def enter():
     ending_success = load_wav('resource/victory.wav')
     fail = load_wav('resource/fail.wav')
     collide_sound = load_wav('resource/collide.wav')
+
+    power_up = load_image('resource/item_power1.png')
+    power_sound = load_wav('resource/jump.wav')
+
+    is_not_protect = 1
+    key_check = 1
 
 def exit():
     pass

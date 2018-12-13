@@ -3,6 +3,7 @@ import logo_state
 import random
 import game_framework
 import game_world
+from player import Player
 
 class Item:
     SPEED = 200
@@ -14,6 +15,10 @@ class Item:
         self.speed = 1 + random.random()
         self.setting = False
         self.item_kind = random.randint(0, level + 1)
+        while logo_state.key_check == 2 and self.item_kind == 0:
+            self.item_kind = random.randint(0, level + 1)
+        while (logo_state.is_not_protect == 2 or logo_state.is_not_protect == 3)and self.item_kind == 3:
+            self.item_kind = random.randint(0, level + 1)
         self.progress_image = logo_state.progress_bar
         self.progress_index = 9
         self.press_time = 0.0
@@ -22,6 +27,9 @@ class Item:
         self.life_get = False
         self.key_get = False
         self.is_press = False
+        self.power_frame = 0
+        self.time = 0
+        self.size = 75
         print(self.item_kind)
 
     def item_down_animation(self):
@@ -36,7 +44,7 @@ class Item:
             self.y += game_framework.frame_time * self.speed * Item.SPEED
             if self.y >= Item.ANIMATION_TOP:
                 if self.item_kind == 0:
-                    self.x, self.y = 150, 40
+                    self.x, self.y = 100, 40
                     self.key_get = True
                 elif self.item_kind == 1:
                     self.life_get = True
@@ -48,9 +56,21 @@ class Item:
             if self.y >= 575:
                 game_world.remove_object(self)
 
+    def item_power_up_animation(self):
+        self.time += game_framework.frame_time
+        self.power_frame = round(self.time) % 5
+        if self.time > 1 and self.power_frame == 0:
+            logo_state.is_not_protect = 1
+            logo_state.power_sound.set_volume(32)
+            logo_state.power_sound.play()
+            game_world.remove_object(self)
+
     def update(self):
         if self.animation_index == 0: Item.item_down_animation(self)
         elif self.animation_index == 1: Item.item_get_animation(self)
+        elif self.animation_index == 2 and self.item_kind == 3:
+            self.x, self.y = 170, 40
+            Item.item_power_up_animation(self)
         elif self.animation_index == 2 and (self.item_kind != 0 and self.item_kind != 1): Item.item_goto_sky(self)
 
         if self.setting:
@@ -65,6 +85,10 @@ class Item:
                     elif self.level == 3: self.image = logo_state.black
                     elif self.level == 4: self.image = logo_state.yellow
                     elif self.level == 5: self.image = logo_state.blue
+                elif self.item_kind == 3:
+                    self.image = logo_state.power_up
+                    self.size = 50
+                    logo_state.is_not_protect = 2
                 else:
                     self.image = logo_state.npc_image1
 
@@ -75,7 +99,9 @@ class Item:
             self.press_time += game_framework.frame_time
 
     def draw(self):
-        self.image.draw(self.x, self.y)
+        self.image.clip_draw(self.power_frame * self.size, 0, self.size, self.size, self.x, self.y)
+        #else:
+            #self.image.draw(self.x, self.y)
         if self.setting:
             self.progress_image.clip_draw(0, self.progress_index * 50, 100, 50, self.x, self.y + 50)
 
