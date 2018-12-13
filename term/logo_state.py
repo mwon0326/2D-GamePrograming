@@ -20,6 +20,7 @@ key_image, power_up = None, None
 gate_image = None
 start_ui_normal, start_ui_enter, start_ui_press = None, None, None
 back_sound, effect_sound, intro_sound, clear_sound, ending_success, fail = None, None, None, None, None, None
+pause_normal, pause_enter, pause_press = None, None, None
 collide_sound, power_sound = None, None
 time = 0.0
 image = None
@@ -40,6 +41,11 @@ def enter():
     global start_ui_enter, start_ui_normal, start_ui_press
     global back_sound, effect_sound, intro_sound, clear_sound,ending_success, fail, collide_sound, power_sound
     global is_not_protect, key_check
+    global pause_normal, pause_enter, pause_press
+
+    pause_normal = load_image('resource/pause_normal.png')
+    pause_enter = load_image('resource/pause_enter.png')
+    pause_press = load_image('resource/pause_press.png')
 
     image = load_image('resource/kpu_credit.png')
     player_image = load_image('resource/animation.png')

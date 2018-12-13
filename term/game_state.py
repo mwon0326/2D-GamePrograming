@@ -69,7 +69,7 @@ def GameEnter():
         game_world.remove_objects_at_layer(game_world.layer_message)
 
     e = UI(level, 1)
-    game_state = GAME_READY
+    game_state = GAME_START
     game_world.add_object(e, game_world.layer_message)
     logo_state.intro_sound.set_volume(32)
     logo_state.intro_sound.play()
@@ -98,6 +98,13 @@ def GameSuccess():
     logo_state.back_sound.stop()
     logo_state.ending_success.set_volume(32)
     logo_state.ending_success.play()
+
+def GameReady():
+    global game_state
+    game_state = GAME_READY
+    e = UI(level, 5)
+    game_world.add_object(e, game_world.layer_message)
+    logo_state.back_sound.stop()
 
 def GameOver():
     global game_state
@@ -227,16 +234,19 @@ def handle_events():
     for e in events:
         if e.type == SDL_QUIT: game_framework.quit()
         if game_state == IN_PLAY:
-            player.handle_events(e)
-            if open_gate:
-                for g in game_world.objects_at_layer(game_world.layer_gate):
-                    is_next = g.handle_events(e, player, player.image_index, 3)
-                    if is_next:
-                        if level < 5:
-                            GameEnd()
-                        else:
-                            GameSuccess()
-                        open_gate = False
+            if (e.type, e.key) == (SDL_KEYDOWN, SDLK_ESCAPE):
+                GameReady()
+            else :
+                player.handle_events(e)
+                if open_gate:
+                    for g in game_world.objects_at_layer(game_world.layer_gate):
+                        is_next = g.handle_events(e, player, player.image_index, 3)
+                        if is_next:
+                            if level < 5:
+                                GameEnd()
+                            else:
+                                GameSuccess()
+                            open_gate = False
 
             if e.type == SDL_KEYDOWN:
                 if e.key == SDLK_SPACE:
@@ -247,7 +257,7 @@ def handle_events():
                 if e.key == SDLK_SPACE:
                     for i in game_world.objects_at_layer(game_world.layer_item):
                         i.is_press = False
-        elif game_state == GAME_READY:
+        elif game_state == GAME_START:
             if e.type == SDL_KEYDOWN:
                 if e.key == SDLK_SPACE:
                     GamePlay()
@@ -263,6 +273,10 @@ def handle_events():
             for u in game_world.objects_at_layer(game_world.layer_message):
                 is_fail = u.handle_events(e)
                 if is_fail : game_framework.change_state(title_state)
+        elif game_state == GAME_READY:
+            for u in game_world.objects_at_layer(game_world.layer_message):
+                is_pause = u.handle_events(e)
+                if is_pause: GamePlay()
 
 def exit():
     global player, background, state_box, life

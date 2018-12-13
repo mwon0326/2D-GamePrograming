@@ -24,6 +24,8 @@ class UI:
             UI.image = logo_state.stage_success_normal
         elif state == 4:
             UI.image = logo_state.stage_fail_normal
+        elif state == 5:
+            UI.image = logo_state.pause_normal
         self.is_press = False
         self.is_mouse = False
         self.is_return = False
@@ -65,6 +67,13 @@ class UI:
                 return logo_state.stage_fail_enter
             elif mode == 3:
                 return logo_state.stage_fail_press
+        elif self.state == 5:
+            if mode == 1:
+                return logo_state.pause_normal
+            elif mode == 2:
+                return logo_state.pause_enter
+            elif mode == 3:
+                return logo_state.pause_press
 
     def handle_events(self, event):
         self.is_return = False
